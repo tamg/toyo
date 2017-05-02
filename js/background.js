@@ -3,18 +3,13 @@ var mailToAddress
 var contextMenuItem = {
   "id": "emailMe",
   "title": "Email Me Yo!",
-  "contexts": ["all"]
+  "contexts": ["selection", "page"]
 }
 
 chrome.contextMenus.create(contextMenuItem) //right click menu
 
-chrome.runtime.onMessage.addListener( function(request,sender,sendResponse){ //listening from popup
-    if( request.button === "mailTo" ){
-      mailToAddress = request.value
-      chrome.storage.sync.set({'mailTo': mailToAddress}, function() { //save to storage
-        console.log('current email:', mailToAddress)
-      })
-    }
+chrome.storage.sync.get("mailTo", function (storage) {
+    mailToAddress = storage.mailTo || "not set yet"
 })
 
 chrome.contextMenus.onClicked.addListener(function(data){
@@ -24,7 +19,8 @@ chrome.contextMenus.onClicked.addListener(function(data){
       var emailAddress = mailToAddress //from storage
       var title = tabs[0].title
       var url = tabs[0].url
-      var body = `Emailed from ${url} \n ${data.selectionText || ''}`
+      var body = `Emailed from ${url} ${data.selectionText || ''}`
+      console.log(body);
 
       var gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=${emailAddress}&su=${title}&body=${body}`
 
@@ -40,7 +36,7 @@ chrome.contextMenus.onClicked.addListener(function(data){
               var send = document.getElementById(':p0')
               console.log(send);
               send.click()
-            },4000)
+            },5000)
             `
             chrome.tabs.executeScript(tabId, { code: code })
           }
