@@ -1,0 +1,27 @@
+{
+  "manifest_version": 2,
+  "name": "Toyo",
+  "version": "1.0",
+  "description": "Email yourself instantly",
+  "icons": {
+    "128": "./png/toyo128.png",
+    "48": "./png/toyo48.png",
+    "16": "./png/toyo16.png"
+  },
+  "browser_action": {
+    "default_icon": "./png/toyo16.png",
+    "default_popup": "popup.html"
+  },
+
+  "background": {
+    "scripts": ["./js/background.js"]
+  },
+
+  "permissions": [
+    "tabs",
+    "contextMenus",
+    "activeTab",
+    "storage",
+    "https://mail.google.com/*"
+  ]
+}
